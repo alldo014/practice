@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
+import { auth } from "@/auth";
+import { logout } from "@/app/actions/auth";
 import styles from "./NavBar.module.css";
 
 const NAV_LINKS = [
@@ -10,7 +12,10 @@ const NAV_LINKS = [
   { label: "Gallery", href: "#" },
 ];
 
-export default function NavBar() {
+export default async function NavBar() {
+  const session = await auth();
+  const user = session?.user;
+
   return (
     <header className={styles.navbar}>
       <div className={`container ${styles.inner}`}>
@@ -26,12 +31,27 @@ export default function NavBar() {
             ))}
           </ul>
           <div className={styles.actions}>
-            <Button href="/login" variant="outline">
-              Sign in
-            </Button>
-            <Button href="/register" variant="primary">
-              Register
-            </Button>
+            {user ? (
+              <>
+                <Link href="/account" className={styles.greeting}>
+                  {user.name ?? user.email}
+                </Link>
+                <form action={logout}>
+                  <Button type="submit" variant="outline">
+                    Sign out
+                  </Button>
+                </form>
+              </>
+            ) : (
+              <>
+                <Button href="/login" variant="outline">
+                  Sign in
+                </Button>
+                <Button href="/register" variant="primary">
+                  Register
+                </Button>
+              </>
+            )}
           </div>
         </nav>
       </div>
