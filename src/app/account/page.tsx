@@ -13,11 +13,12 @@ export const metadata: Metadata = { title: "My bookings — Luxury Stays" };
 export const dynamic = "force-dynamic";
 
 function statusBadge(booking: UserBooking): { label: string; className: string } {
-  if (booking.paymentStatus === "paid") {
-    return { label: "Confirmed", className: styles.badgePaid };
-  }
+  // A cancelled booking is cancelled regardless of any prior payment.
   if (booking.status === "cancelled" || booking.paymentStatus === "failed") {
     return { label: "Cancelled", className: styles.badgeFailed };
+  }
+  if (booking.paymentStatus === "paid") {
+    return { label: "Confirmed", className: styles.badgePaid };
   }
   return { label: "Awaiting payment", className: styles.badgePending };
 }
