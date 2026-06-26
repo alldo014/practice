@@ -1,0 +1,109 @@
+.page {
+  padding-block: 48px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 8px 0 4px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--color-muted);
+  margin-bottom: 32px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.booking {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 20px;
+}
+
+.hotelName {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.meta {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-top: 4px;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.total {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
+
+.badgePaid {
+  background-color: #ecfdf3;
+  color: #067647;
+}
+
+.badgePending {
+  background-color: #fffaeb;
+  color: #b54708;
+}
+
+.badgeFailed {
+  background-color: #f2f4f7;
+  color: #475467;
+}
+
+.payLink {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
+.empty {
+  text-align: center;
+  padding: 64px 0;
+}
+
+.empty h3 {
+  font-size: 20px;
+  color: var(--color-heading);
+  margin-bottom: 8px;
+}
+
+.empty p {
+  color: var(--color-muted);
+  margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  .booking {
+    grid-template-columns: 1fr;
+  }
+  .right {
+    align-items: flex-start;
+  }
+}
