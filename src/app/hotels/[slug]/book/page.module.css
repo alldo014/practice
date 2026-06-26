@@ -1,0 +1,75 @@
+.page {
+  padding-block: 48px;
+  max-width: 760px;
+}
+
+.back {
+  display: inline-block;
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-bottom: 16px;
+}
+
+.back:hover {
+  color: var(--color-heading);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 8px 0 4px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--color-muted);
+  margin-bottom: 24px;
+}
+
+.summary {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.summaryMedia {
+  position: relative;
+  width: 120px;
+  height: 90px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background-color: var(--color-bg-alt);
+}
+
+.summaryMedia img {
+  object-fit: cover;
+}
+
+.roomType {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.roomMeta {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-top: 4px;
+}
+
+.price {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 6px;
+}
+
+.priceUnit {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-muted);
+}
