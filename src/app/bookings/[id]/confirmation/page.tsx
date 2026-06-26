@@ -56,10 +56,10 @@ export default async function ConfirmationPage({
   const { listing, booking } = data;
 
   const view =
-    booking.paymentStatus === "paid"
-      ? VIEWS.paid
-      : booking.paymentStatus === "failed"
-        ? VIEWS.failed
+    booking.status === "cancelled" || booking.paymentStatus === "failed"
+      ? VIEWS.failed
+      : booking.paymentStatus === "paid"
+        ? VIEWS.paid
         : VIEWS.pending;
 
   const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
