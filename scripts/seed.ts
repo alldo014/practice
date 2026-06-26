@@ -87,7 +87,7 @@ function schemaFor(slug: string): string {
 async function main() {
   console.log("→ Seeding platform...");
 
-  // Demo guest account (password: password123) for testing later auth/booking.
+  // Demo accounts (all password: password123) for testing auth/booking/CMS.
   const passwordHash = await bcrypt.hash("password123", 10);
   await prisma.user.upsert({
     where: { email: "guest@example.com" },
@@ -99,7 +99,20 @@ async function main() {
       role: "guest",
     },
   });
-  console.log("  ✓ demo guest: guest@example.com / password123");
+  console.log("  ✓ demo guest:  guest@example.com / password123");
+
+  // Platform admin.
+  await prisma.user.upsert({
+    where: { email: "admin@example.com" },
+    update: { role: "admin" },
+    create: {
+      email: "admin@example.com",
+      name: "Platform Admin",
+      passwordHash,
+      role: "admin",
+    },
+  });
+  console.log("  ✓ admin:       admin@example.com / password123");
 
   for (const h of HOTELS) {
     const schemaName = schemaFor(h.slug);
@@ -175,7 +188,23 @@ async function main() {
       },
     });
 
-    console.log(`  ✓ ${h.name} (${schemaName}) — ${hotel.rooms.length} rooms, from IDR ${minPrice.toLocaleString("en-US")}`);
+    // Tenant owner account, linked to this tenant (manages it via the dashboard).
+    const ownerEmail = `owner.${h.slug.replace(/-/g, "")}@example.com`;
+    await prisma.user.upsert({
+      where: { email: ownerEmail },
+      update: { role: "tenant_owner", tenantId: tenant.id },
+      create: {
+        email: ownerEmail,
+        name: `${h.name} Owner`,
+        passwordHash,
+        role: "tenant_owner",
+        tenantId: tenant.id,
+      },
+    });
+
+    console.log(
+      `  ✓ ${h.name} (${schemaName}) — ${hotel.rooms.length} rooms, from IDR ${minPrice.toLocaleString("en-US")} · owner: ${ownerEmail}`,
+    );
   }
 
   console.log("✓ Seed complete.");

@@ -8,7 +8,8 @@ import { signIn, signOut } from "@/auth";
 
 export type AuthFormState = { error?: string } | undefined;
 
-const DEFAULT_REDIRECT = "/";
+// Neutral landing that routes to the right home for the user's role.
+const DEFAULT_REDIRECT = "/post-login";
 
 const registerSchema = z.object({
   name: z.string().trim().min(1, "Please enter your name."),
