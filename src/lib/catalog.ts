@@ -38,8 +38,9 @@ export async function listCities(): Promise<string[]> {
   return rows.map((r) => r.city);
 }
 
+/** Public lookup — only returns published hotels (suspended/archived → null). */
 export async function getListingBySlug(slug: string) {
-  return prisma.hotelListing.findUnique({ where: { slug } });
+  return prisma.hotelListing.findFirst({ where: { slug, status: "published" } });
 }
 
 /** Fetch the hotel + its rooms from the tenant's private schema. */
