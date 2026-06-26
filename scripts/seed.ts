@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../src/lib/db";
 import { getTenantDb, disconnectAllTenantDbs } from "../src/lib/tenant-db";
-import { provisionTenantSchema } from "./provision";
+import { provisionTenantSchema } from "../src/lib/provision";
 
 type RoomSeed = {
   type: string;
