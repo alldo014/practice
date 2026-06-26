@@ -1,0 +1,90 @@
+// Shared `public` schema — global, cross-tenant data.
+// Per-tenant operational data (Hotel/Room/Booking/Payment) lives in per-tenant
+// schemas defined in `prisma/tenant.prisma` and accessed via getTenantDb().
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TenantStatus {
+  active
+  suspended
+
+  @@map("tenant_status")
+}
+
+enum UserRole {
+  guest
+  tenant_owner
+  admin
+
+  @@map("user_role")
+}
+
+enum ListingStatus {
+  draft
+  published
+  archived
+
+  @@map("listing_status")
+}
+
+// A hotel operator. Each tenant owns a private `tenant_<...>` schema.
+model Tenant {
+  id         String        @id @default(cuid())
+  name       String
+  slug       String        @unique
+  schemaName String        @unique @map("schema_name")
+  status     TenantStatus  @default(active)
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @updatedAt @map("updated_at")
+  users      User[]
+  listing    HotelListing?
+
+  @@map("tenants")
+}
+
+// Platform accounts. Guests have no tenant; tenant_owner/admin may reference one.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String?
+  role         UserRole @default(guest)
+  tenantId     String?  @map("tenant_id")
+  tenant       Tenant?  @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// Denormalized catalog row for cross-hotel discovery/search. One per tenant.
+// Mirrors a Hotel that physically lives in the tenant's private schema.
+model HotelListing {
+  id          String        @id @default(cuid())
+  tenantId    String        @unique @map("tenant_id")
+  tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  schemaName  String        @map("schema_name")
+  hotelId     String        @map("hotel_id")
+  name        String
+  slug        String        @unique
+  city        String
+  country     String
+  description String
+  starRating  Int           @map("star_rating")
+  minPrice    Decimal       @map("min_price") @db.Decimal(12, 2)
+  currency    String        @default("IDR")
+  coverImage  String        @map("cover_image")
+  amenities   String[]
+  status      ListingStatus @default(published)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@index([city])
+  @@map("hotel_listings")
+}
