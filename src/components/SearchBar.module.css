@@ -1,0 +1,51 @@
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 160px;
+  min-width: 140px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.field input {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-heading);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.submit {
+  flex: 0 0 auto;
+}
+
+.submit button {
+  height: 40px;
+}

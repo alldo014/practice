@@ -1,0 +1,98 @@
+.page {
+  padding-block: 48px;
+}
+
+.head {
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin-top: 8px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 200px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.field input,
+.field select {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-heading);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.count {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.empty {
+  text-align: center;
+  padding: 64px 0;
+  color: var(--color-muted);
+}
+
+.empty h3 {
+  font-size: 20px;
+  color: var(--color-heading);
+  margin-bottom: 8px;
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .title {
+    font-size: 30px;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
