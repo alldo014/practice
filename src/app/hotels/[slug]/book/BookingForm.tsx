@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { formatIDR } from "@/lib/format";
@@ -8,6 +8,12 @@ import styles from "./BookingForm.module.css";
 
 function toISODate(d: Date): string {
   return d.toISOString().slice(0, 10);
+}
+
+function addDaysISO(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return toISODate(d);
 }
 
 export default function BookingForm({
@@ -28,30 +34,12 @@ export default function BookingForm({
   defaultGuests?: string;
 }) {
   const router = useRouter();
-  const [today, setToday] = useState("");
-  const [checkIn, setCheckIn] = useState(defaultCheckIn ?? "");
-  const [checkOut, setCheckOut] = useState(defaultCheckOut ?? "");
+  const [today] = useState(() => toISODate(new Date()));
+  const [checkIn, setCheckIn] = useState(() => defaultCheckIn ?? addDaysISO(1));
+  const [checkOut, setCheckOut] = useState(() => defaultCheckOut ?? addDaysISO(3));
   const [guests, setGuests] = useState(Number(defaultGuests ?? "2") || 2);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-
-  // Compute date defaults client-side after mount (avoids SSR/hydration drift).
-  useEffect(() => {
-    const now = new Date();
-    setToday(toISODate(now));
-    setCheckIn((current) => {
-      if (current) return current;
-      const tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      return toISODate(tomorrow);
-    });
-    setCheckOut((current) => {
-      if (current) return current;
-      const out = new Date(now);
-      out.setDate(out.getDate() + 3);
-      return toISODate(out);
-    });
-  }, []);
 
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 0;
@@ -79,7 +67,7 @@ export default function BookingForm({
         setPending(false);
         return;
       }
-      router.push(`/checkout/${data.bookingId}`);
+      router.push(`/checkout/${data.bookingId}?h=${encodeURIComponent(slug)}`);
     } catch {
       setError("Network error. Please try again.");
       setPending(false);
