@@ -4,16 +4,22 @@ import { Client } from "pg";
 
 const SCHEMA_NAME_RE = /^tenant_[a-z0-9_]+$/;
 
-// The per-tenant table DDL, generated from prisma/tenant.prisma via
-// `npm run prisma:tenant:ddl`. Drop the template's `CREATE SCHEMA "public"`
-// line — we create the tenant schema ourselves and apply the tables into it.
-const TEMPLATE_DDL = readFileSync(
-  join(process.cwd(), "prisma", "tenant-template.sql"),
-  "utf8",
-)
-  .split("\n")
-  .filter((line) => !/CREATE SCHEMA IF NOT EXISTS "public"/.test(line))
-  .join("\n");
+/**
+ * The per-tenant table DDL, generated from prisma/tenant.prisma via
+ * `npm run prisma:tenant:ddl`. Read lazily (on first provision) and cached.
+ * The template's `CREATE SCHEMA "public"` line is dropped — we create the
+ * tenant schema ourselves and apply the tables into it.
+ */
+let templateDdl: string | null = null;
+function getTemplateDdl(): string {
+  if (templateDdl === null) {
+    templateDdl = readFileSync(join(process.cwd(), "prisma", "tenant-template.sql"), "utf8")
+      .split("\n")
+      .filter((line) => !/CREATE SCHEMA IF NOT EXISTS "public"/.test(line))
+      .join("\n");
+  }
+  return templateDdl;
+}
 
 /** DATABASE_URL with query params stripped — pg uses the search_path we SET. */
 function baseConnectionString(): string {
@@ -26,9 +32,9 @@ function baseConnectionString(): string {
 
 /**
  * Create a tenant's private schema (`tenant_<...>`) and apply the per-tenant
- * table template into it. With `reset`, drops any existing schema first so the
- * seed is idempotent. All statements run on one dedicated connection so the
- * SET search_path persists across the multi-statement DDL.
+ * table template into it. With `reset`, drops any existing schema first (used
+ * by the seed for idempotency). All statements run on one dedicated connection
+ * so the SET search_path persists across the multi-statement DDL.
  */
 export async function provisionTenantSchema(
   schemaName: string,
@@ -46,7 +52,7 @@ export async function provisionTenantSchema(
     }
     await client.query(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`);
     await client.query(`SET search_path TO "${schemaName}"`);
-    await client.query(TEMPLATE_DDL);
+    await client.query(getTemplateDdl());
   } finally {
     await client.end();
   }
