@@ -17,13 +17,3 @@ export async function getOwnerDashboard(tenantId: string | null) {
 
   return { tenant, hotel, roomsCount, bookingsCount };
 }
-
-/** High-level platform counts for the admin overview. */
-export async function getAdminCounts() {
-  const [tenantCount, listingCount, guestCount] = await Promise.all([
-    prisma.tenant.count(),
-    prisma.hotelListing.count(),
-    prisma.user.count({ where: { role: "guest" } }),
-  ]);
-  return { tenantCount, listingCount, guestCount };
-}

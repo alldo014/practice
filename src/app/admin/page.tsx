@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireRole } from "@/lib/auth-helpers";
-import { getAdminCounts } from "@/lib/dashboard";
+import { getPlatformStats } from "@/lib/admin";
+import { formatIDR } from "@/lib/format";
 import styles from "@/components/console.module.css";
 
 export const metadata: Metadata = { title: "Admin — Luxury Stays" };
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminOverview() {
   await requireRole("admin");
-  const counts = await getAdminCounts();
+  const stats = await getPlatformStats();
 
   return (
     <>
@@ -19,16 +20,28 @@ export default async function AdminOverview() {
 
       <div className={styles.statGrid}>
         <div className={styles.stat}>
-          <div className={styles.statValue}>{counts.tenantCount}</div>
+          <div className={styles.statValue}>{stats.tenantCount}</div>
           <div className={styles.statLabel}>Tenants</div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statValue}>{counts.listingCount}</div>
+          <div className={styles.statValue}>{stats.listingCount}</div>
           <div className={styles.statLabel}>Published hotels</div>
         </div>
         <div className={styles.stat}>
-          <div className={styles.statValue}>{counts.guestCount}</div>
+          <div className={styles.statValue}>{stats.roomCount}</div>
+          <div className={styles.statLabel}>Rooms</div>
+        </div>
+        <div className={styles.stat}>
+          <div className={styles.statValue}>{stats.bookingCount}</div>
+          <div className={styles.statLabel}>Bookings</div>
+        </div>
+        <div className={styles.stat}>
+          <div className={styles.statValue}>{stats.guestCount}</div>
           <div className={styles.statLabel}>Guests</div>
+        </div>
+        <div className={styles.stat}>
+          <div className={styles.statValue} style={{ fontSize: 22 }}>{formatIDR(stats.paidRevenue)}</div>
+          <div className={styles.statLabel}>Gross paid revenue</div>
         </div>
       </div>
 
