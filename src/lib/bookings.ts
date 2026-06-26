@@ -43,6 +43,10 @@ export async function createBooking(input: CreateBookingInput) {
 
   const listing = await prisma.hotelListing.findUnique({ where: { slug } });
   if (!listing) throw new BookingError("NOT_FOUND", "Hotel not found.");
+  // A suspended/unpublished hotel cannot take new bookings (even via direct API).
+  if (listing.status !== "published") {
+    throw new BookingError("NOT_FOUND", "This hotel is not available for booking.");
+  }
 
   const tenantDb = getTenantDb(listing.schemaName);
 
