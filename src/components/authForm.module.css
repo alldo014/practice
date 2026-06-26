@@ -1,0 +1,77 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 8px 0 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-body);
+}
+
+.field input {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-heading);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.error {
+  font-size: 14px;
+  color: #b42318;
+  background-color: #fef3f2;
+  border: 1px solid #fecdca;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.alt {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-top: 20px;
+  text-align: center;
+}
+
+.alt a {
+  color: var(--color-accent);
+  font-weight: 500;
+}
